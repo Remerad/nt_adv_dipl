@@ -4,7 +4,7 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 import random
 from pprint import pprint
 
-vk_session = vk_api.VkApi(token='09b1de1eb574c8ca1bef2723dc95db3f04cade9238e7521c5bb5e593d82c57d00bb23cc3cc4019f893ee4')
+vk_session = vk_api.VkApi(token='')
 vk = vk_session.get_api()
 longpoll = VkLongPoll(vk_session)
 
@@ -39,7 +39,7 @@ for event in longpoll.listen():
             'fields': 'sex, bdate, city, relation, country'
         }
         params = {
-            'access_token': '09b1de1eb574c8ca1bef2723dc95db3f04cade9238e7521c5bb5e593d82c57d00bb23cc3cc4019f893ee4',
+            'access_token': '',
             'v': 5.131
         }
         response = requests.get(users_info_url, params={**params, **users_info_params})

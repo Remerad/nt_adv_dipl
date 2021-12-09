@@ -63,6 +63,13 @@ def make_target_params_str(dict_of_targets_params):
     res_str += "."
     return res_str
 
+def send_photo(vk, user_id, owner_id, photo_id, access_key):
+    attachment = f'photo{owner_id}_{photo_id}_{access_key}'
+    vk.messages.send(
+        random_id=random.randint(1, 10**7),
+        peer_id=user_id,
+        attachment=attachment
+    )
 
 class VKBot:
     def __init__(self, vk_group_token):
@@ -100,8 +107,8 @@ class VKBot:
                         vk.messages.send(
                             user_id=event.user_id,
                             message=f'Итак, что мы знаем:'
-                                    f'\nВаш user_id:{event.user_id}'
-                                    f'\nВам {get_full_years(user_data["bdate"])} полных лет'
+                                    f'\nВаш user_id: {event.user_id}'
+                                    f'\nВам полных лет: {get_full_years(user_data["bdate"])} '
                                     f'\nВаш пол: {male_female_or_none(user_data["sex"])}'
                                     f'\nВаш город: {user_data["city"]["title"]}',
                             random_id=random.randint(1, 10**7)
@@ -111,18 +118,30 @@ class VKBot:
                             message=make_target_params_str(get_params_for_search(user_data)),
                             random_id=random.randint(1, 10 ** 7)
                         )
+                        #TODO: изменение параметров поиска через диалог
                         vk.messages.send(
                             user_id=event.user_id,
-                            message='Проводим поиск по ВК',
+                            message=f'Проводим поиск по ВК',
                             random_id=random.randint(1, 10 ** 7)
                         )
                         print("\nСписок ссылок на фото:")
                         i=0
-                        for target in search_users_in_vk(get_params_for_search(user_data)):
-                            pprint(get_one_user_photos_urls_list(target))
-                            time.sleep(0.3)
-                            print(i)
-                            i += 1
+                        for target in search_users_in_vk(get_params_for_search(user_data))[:3]:
+                            target_data = self.get_user_data(target)
+                            vk.messages.send(
+                                user_id=event.user_id,
+                                message=f'ID пользователя: {target}'
+                                        f'\nИмя: {target_data["first_name"]} {target_data["last_name"]}'                                        
+                                        f'\n фото пользователя:',
+                                random_id=random.randint(1, 10 ** 7)
+                            )
+                            for img_url in get_one_user_photos_urls_list(target)['items']:
+                                vk.messages.send(
+                                    user_id=event.user_id,
+                                    message=f'\n{img_url["url"]}',
+                                    random_id=random.randint(1, 10 ** 7)
+                                )
+
                         #pprint(self.get_user_data(event.user_id))
                 else:
                     if event.from_user:
@@ -133,4 +152,4 @@ class VKBot:
                         )
                         pprint(self.get_user_data(event.user_id))
 
-print(get_full_years("14.7.1989"))
+#print(get_full_years("14.7.1989"))

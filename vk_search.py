@@ -36,22 +36,23 @@ def get_one_user_photos_urls_list(photos_owner_id):
     params = {
         'owner_id': str(photos_owner_id),
         'album_id': 'profile',
-        'access_token': 'a0a9ae4006260db650ede3957f56d61b642f9ef8047f698a79e47ab5f03ff641fd0e56370bd8578002da7',
+        'access_token': '',
         'extended': 1,
         'v': '5.131'
     }
     response = requests.get(URL, params=params).json()
-    pprint(response)
+    #pprint(response)
     user_photos_urls_list = []
-    for photo in response['response']['items']:
-        max_size = 0
-        max_size_url = ''
-        for photo_size in photo['sizes']:
-            if photo_size['height'] > max_size:
-                max_size = photo_size['height']
-                max_size_url = photo_size['url']
-                max_size_type = photo_size['type']
-        user_photos_urls_list.append({'id': photo['id'], 'likes': photo['likes']['count'], 'url': max_size_url})
-    return {'owner_id': photos_owner_id, 'items': user_photos_urls_list}
-    #return response
 
+    if not 'error' in response.keys():
+        for photo in response['response']['items']:
+            max_size = 0
+            max_size_url = ''
+            for photo_size in photo['sizes']:
+                if photo_size['height'] >= max_size and photo_size['url'] != '':
+                    max_size = photo_size['height']
+                    max_size_url = photo_size['url']
+            user_photos_urls_list.append({'id': photo['id'], 'likes': photo['likes']['count'], 'url': max_size_url})
+    return {'owner_id': photos_owner_id,
+            'items': sorted(user_photos_urls_list, key=lambda k: k['likes'], reverse=True)[:3]}
+    #return response

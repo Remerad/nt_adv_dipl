@@ -7,7 +7,6 @@
 #7. Говорим, сколько подходящих нашли, спрашиваем, сколько выводить?
 #8. выводим, сколько указано.
 
-from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_bot import VKBot
 def funcrt(*args):
     print(len(args))
@@ -16,6 +15,6 @@ def funcrt(*args):
 
 
 if __name__ == '__main__':
-    bot = VKBot('')
+    bot = VKBot(vk_group_token = '')
     bot.wait_for_user()
     #funcrt(1, 3, 4)
