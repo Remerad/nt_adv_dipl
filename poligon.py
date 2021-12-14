@@ -5,7 +5,7 @@ from vk_api.upload import VkUpload
 from vk_api.utils import get_random_id
 
 
-TOKEN = '09b1de1eb574c8ca1bef2723dc95db3f04cade9238e7521c5bb5e593d82c57d00bb23cc3cc4019f893ee4'
+TOKEN = ''
 PEER_ID = 231029
 
 
